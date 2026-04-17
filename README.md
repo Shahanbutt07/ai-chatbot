@@ -24,30 +24,29 @@ A production-grade conversational AI chatbot with persistent memory, multi-conve
 
 ## Setup
 
-```bash
-# 1. Clone / copy files
-# 2. Install dependencies
-pip install -r requirements.txt
+    # 1. Clone the repo
+    git clone https://github.com/YOUR_USERNAME/ai-chatbot.git
+    cd ai-chatbot
 
-# 3. Create .env file
-GROQ_API_KEY=your_groq_key_here
-LANGCHAIN_API_KEY=your_langsmith_key_here   # optional, for tracing
+    # 2. Install dependencies
+    pip install -r requirements.txt
 
-# 4. Run
-streamlit run app.py
-```
+    # 3. Create .env file
+    GROQ_API_KEY=your_groq_key_here
+    LANGCHAIN_API_KEY=your_langsmith_key_here
+
+    # 4. Run
+    streamlit run app.py
 
 ## Project Structure
 
-```
-├── app.py           # Main Streamlit application
-├── memory.py        # SQLite conversation persistence layer
-├── rag.py           # Document ingestion + FAISS RAG chain
-├── requirements.txt
-├── .env             # Your API keys (never commit this)
-├── chat_history.db  # Auto-created SQLite database
-└── vector_stores/   # Auto-created FAISS indexes per conversation
-```
+    ├── app.py           # Main Streamlit application
+    ├── memory.py        # SQLite conversation persistence layer
+    ├── rag.py           # Document ingestion + FAISS RAG chain
+    ├── requirements.txt
+    ├── .env             # Your API keys (never commit this)
+    ├── chat_history.db  # Auto-created SQLite database
+    └── vector_stores/   # Auto-created FAISS indexes per conversation
 
 ## How RAG Works
 
@@ -57,9 +56,9 @@ streamlit run app.py
 4. On each question, a **history-aware retriever** rephrases the query using chat context, fetches top-4 chunks, and passes them to the LLM with the full conversation history
 5. The badge "📄 RAG Active" confirms document mode is on
 
-## What to Build Next (Tier 3+)
+## What to Build Next
 
-- [ ] User authentication (Streamlit-Authenticator)
+- [ ] User authentication
 - [ ] Multi-model switcher (GPT-4o, Gemini, Claude)
 - [ ] Export chat to PDF/Markdown
 - [ ] LangChain Agent with web search tool
