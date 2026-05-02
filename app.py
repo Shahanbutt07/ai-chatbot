@@ -53,7 +53,9 @@ st.markdown("""
 }
 
 html, body, .stApp { background: var(--ink) !important; font-family: 'Inter', sans-serif !important; color: var(--white) !important; }
-.main .block-container { padding: 0 !important; max-width: 100% !important; }
+.main .block-container { padding: 24px 40px 16px !important; max-width: 900px !important; }
+*:focus { outline: none !important; }
+[data-baseweb] *:focus { outline: none !important; box-shadow: none !important; }
 ::-webkit-scrollbar { width: 3px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: var(--smoke); border-radius: 3px; }
 
 [data-testid="stSidebar"] { background: var(--ink-2) !important; border-right: 1px solid var(--line) !important; }
@@ -105,9 +107,21 @@ button[kind="primary"]:hover { background: var(--gold-dim) !important; box-shado
 .welcome-cta { margin-top: 44px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--smoke) !important; }
 .welcome-cta::before { content: '← '; }
 
-.stTextInput input { background: transparent !important; border: none !important; border-bottom: 1px solid var(--line) !important; border-radius: 0 !important; font-family: 'Playfair Display', serif !important; font-weight: 700 !important; font-size: 22px !important; color: var(--white) !important; padding: 0 0 8px !important; box-shadow: none !important; }
-.stTextInput input:focus { border-bottom-color: var(--gold) !important; box-shadow: none !important; }
-.stTextInput input::placeholder { color: var(--smoke) !important; }
+.stTextInput input {
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1px solid var(--line) !important;
+    border-radius: 0 !important;
+    font-family: 'Inter', sans-serif !important;
+    font-weight: 500 !important;
+    font-size: 15px !important;
+    letter-spacing: 0.2px !important;
+    color: var(--white) !important;
+    padding: 0 0 8px !important;
+    box-shadow: none !important;
+}
+.stTextInput input:focus { border-bottom-color: var(--gold) !important; box-shadow: none !important; outline: none !important; }
+.stTextInput input::placeholder { color: var(--smoke) !important; font-style: italic; }
 
 [data-testid="stFileUploader"] { background: var(--ink-3) !important; border: 1px dashed var(--line-hi) !important; border-radius: var(--r-md) !important; padding: 6px 12px !important; }
 [data-testid="stFileUploader"]:hover { border-color: var(--gold) !important; }
@@ -118,18 +132,74 @@ button[kind="primary"]:hover { background: var(--gold-dim) !important; box-shado
 @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:0.3} }
 @keyframes fade-in { from{opacity:0;transform:translateY(-3px)} to{opacity:1;transform:translateY(0)} }
 
-[data-testid="stChatMessage"] { background: transparent !important; border: none !important; padding: 14px 0 !important; }
-[data-testid="chatAvatarIcon-user"] { background: var(--ink-4) !important; border-radius: 6px !important; border: 1px solid var(--line-hi) !important; }
-[data-testid="chatAvatarIcon-assistant"] { background: linear-gradient(135deg, #3A2800, #7A5800) !important; border-radius: 6px !important; border: 1px solid var(--gold) !important; }
-[data-testid="stChatMessage"] p, [data-testid="stChatMessage"] li, [data-testid="stChatMessage"] span { font-size: 14px !important; line-height: 1.75 !important; color: var(--white-dim) !important; font-weight: 300 !important; font-family: 'Inter', sans-serif !important; }
+/* ── HIDE default Streamlit avatar images, replace with initials via CSS ── */
+[data-testid="chatAvatarIcon-user"] img,
+[data-testid="chatAvatarIcon-assistant"] img { display: none !important; }
+
+[data-testid="chatAvatarIcon-user"],
+[data-testid="chatAvatarIcon-assistant"] {
+    width: 28px !important; height: 28px !important;
+    border-radius: 6px !important;
+    display: flex !important; align-items: center !important; justify-content: center !important;
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: 10px !important; font-weight: 500 !important;
+    flex-shrink: 0 !important;
+}
+[data-testid="chatAvatarIcon-user"] {
+    background: var(--ink-4) !important;
+    border: 1px solid var(--line-hi) !important;
+    color: var(--silver) !important;
+}
+[data-testid="chatAvatarIcon-user"]::after {
+    content: 'YOU' !important;
+    color: var(--silver) !important;
+    font-size: 8px !important;
+    letter-spacing: 0.5px !important;
+}
+[data-testid="chatAvatarIcon-assistant"] {
+    background: #1C1400 !important;
+    border: 1px solid var(--gold) !important;
+    color: var(--gold) !important;
+}
+[data-testid="chatAvatarIcon-assistant"]::after {
+    content: '◎' !important;
+    color: var(--gold) !important;
+    font-size: 12px !important;
+}
+
+/* ── MESSAGES ── */
+[data-testid="stChatMessage"] { background: transparent !important; border: none !important; padding: 10px 0 !important; }
+[data-testid="stChatMessage"] p, [data-testid="stChatMessage"] li { font-size: 14px !important; line-height: 1.75 !important; color: var(--white-dim) !important; font-weight: 300 !important; font-family: 'Inter', sans-serif !important; }
+[data-testid="stChatMessage"] span { color: var(--white-dim) !important; font-family: 'Inter', sans-serif !important; }
 [data-testid="stChatMessage"] code { background: var(--ink-4) !important; border: 1px solid var(--line) !important; border-radius: 3px !important; padding: 2px 6px !important; font-family: 'JetBrains Mono', monospace !important; font-size: 12px !important; color: var(--gold-pale) !important; }
 [data-testid="stChatMessage"] pre { background: var(--ink-3) !important; border: 1px solid var(--line) !important; border-left: 2px solid var(--gold) !important; border-radius: 0 var(--r-sm) var(--r-sm) 0 !important; padding: 16px !important; }
 [data-testid="stChatMessage"] pre code { background: transparent !important; border: none !important; padding: 0 !important; color: var(--white-dim) !important; }
 
-[data-testid="stChatInput"] { background: var(--ink-3) !important; border: 1px solid var(--line-hi) !important; border-radius: var(--r-md) !important; padding: 4px 8px !important; transition: border-color 0.2s ease !important; }
-[data-testid="stChatInput"]:focus-within { border-color: var(--gold) !important; box-shadow: 0 0 0 2px var(--gold-dim) !important; }
-[data-testid="stChatInput"] textarea { background: transparent !important; color: var(--white) !important; font-family: 'Inter', sans-serif !important; font-size: 14px !important; font-weight: 300 !important; border: none !important; }
-[data-testid="stChatInput"] textarea::placeholder { color: var(--smoke) !important; font-style: italic; }
+/* ── CHAT INPUT — kill Streamlit's red outline completely ── */
+[data-testid="stChatInput"],
+[data-testid="stChatInput"] > div,
+[data-testid="stChatInput"] > div > div {
+    background: var(--ink-3) !important;
+    border: 1px solid var(--line-hi) !important;
+    border-radius: var(--r-md) !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+[data-testid="stChatInput"]:focus-within,
+[data-testid="stChatInput"]:focus-within > div,
+[data-testid="stChatInput"]:focus-within > div > div {
+    border-color: var(--gold) !important;
+    box-shadow: 0 0 0 2px var(--gold-dim) !important;
+    outline: none !important;
+}
+/* Kill any red/orange/default focus rings from Streamlit internals */
+[data-testid="stChatInput"] *:focus,
+[data-testid="stChatInput"] *:focus-visible,
+[data-testid="stChatInput"] *:focus-within { outline: none !important; box-shadow: none !important; border-color: transparent !important; }
+[data-testid="stChatInput"] textarea { background: transparent !important; color: var(--white) !important; font-family: 'Inter', sans-serif !important; font-size: 14px !important; font-weight: 300 !important; border: none !important; outline: none !important; box-shadow: none !important; }
+[data-testid="stChatInput"] textarea::placeholder { color: var(--ash) !important; font-style: italic; }
+/* The send button inside chat input */
+[data-testid="stChatInput"] button { background: var(--gold-dim) !important; border: 1px solid var(--gold) !important; border-radius: 6px !important; color: var(--gold) !important; }
 
 .stAlert { background: var(--ink-3) !important; border-radius: var(--r-sm) !important; border: 1px solid var(--line) !important; font-size: 12px !important; }
 .stSuccess { border-left: 2px solid var(--gold) !important; background: var(--gold-dim) !important; }
