@@ -132,26 +132,44 @@ button[kind="primary"]:hover { background: var(--gold-dim) !important; box-shado
 @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:0.3} }
 @keyframes fade-in { from{opacity:0;transform:translateY(-3px)} to{opacity:1;transform:translateY(0)} }
 
-/* ── AVATARS ── */
+/* ── HIDE ALL DEFAULT STREAMLIT AVATARS COMPLETELY ── */
 [data-testid="chatAvatarIcon-user"],
-[data-testid="chatAvatarIcon-assistant"] {
-    width: 28px !important;
-    height: 28px !important;
-    border-radius: 6px !important;
-    overflow: hidden !important;
-    flex-shrink: 0 !important;
-}
+[data-testid="chatAvatarIcon-assistant"],
 [data-testid="chatAvatarIcon-user"] *,
 [data-testid="chatAvatarIcon-assistant"] * {
     display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
 }
-[data-testid="chatAvatarIcon-user"] {
-    background: var(--ink-4) !important;
-    border: 1px solid var(--line-hi) !important;
+
+/* ── CUSTOM MESSAGE LABELS ── */
+.msg-wrap {
+    display: flex;
+    gap: 16px;
+    padding: 14px 0;
+    align-items: flex-start;
+    border-bottom: 1px solid var(--line);
 }
-[data-testid="chatAvatarIcon-assistant"] {
-    background: #1C1400 !important;
-    border: 1px solid var(--gold) !important;
+.msg-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    min-width: 44px;
+    padding-top: 2px;
+    flex-shrink: 0;
+}
+.msg-label-user { color: var(--silver); }
+.msg-label-ai   { color: var(--gold); }
+.msg-content {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--white-dim);
+    line-height: 1.75;
+    flex: 1;
 }
 
 /* ── MESSAGES ── */
@@ -381,9 +399,17 @@ st.divider()
 
 for message in st.session_state.chat_history:
     if isinstance(message, HumanMessage):
-        st.chat_message("user").write(message.content)
+        st.markdown(f"""
+        <div class="msg-wrap">
+            <span class="msg-label msg-label-user">You</span>
+            <span class="msg-content">{message.content}</span>
+        </div>""", unsafe_allow_html=True)
     else:
-        st.chat_message("assistant").write(message.content)
+        st.markdown(f"""
+        <div class="msg-wrap">
+            <span class="msg-label msg-label-ai">AI</span>
+            <span class="msg-content">{message.content}</span>
+        </div>""", unsafe_allow_html=True)
 
 input_text = st.chat_input("Ask anything...")
 
@@ -392,7 +418,12 @@ if input_text:
         auto_title_conversation(st.session_state.active_conv_id, input_text)
 
     trimmed_history = trim_history(st.session_state.chat_history)
-    st.chat_message("user").write(input_text)
+
+    st.markdown(f"""
+    <div class="msg-wrap">
+        <span class="msg-label msg-label-user">You</span>
+        <span class="msg-content">{input_text}</span>
+    </div>""", unsafe_allow_html=True)
 
     if has_vectorstore(st.session_state.active_conv_id):
         try:
@@ -400,7 +431,8 @@ if input_text:
             if rag_chain is None:
                 st.error("Could not load document. Please re-upload.")
                 st.stop()
-            with st.chat_message("assistant"):
+            with st.container():
+                st.markdown('<div class="msg-wrap"><span class="msg-label msg-label-ai">AI</span><div class="msg-content">', unsafe_allow_html=True)
                 placeholder = st.empty()
                 full_response = ""
                 for chunk in rag_chain.stream({"question": input_text, "chat_history": trimmed_history}):
@@ -408,6 +440,7 @@ if input_text:
                         full_response += chunk
                         placeholder.markdown(full_response + "▌")
                 placeholder.markdown(full_response)
+                st.markdown('</div></div>', unsafe_allow_html=True)
             response = full_response
         except Exception as e:
             st.error(f"RAG error: {e}")
@@ -415,8 +448,16 @@ if input_text:
     else:
         try:
             chain = build_plain_chain(active_system_prompt)
-            with st.chat_message("assistant"):
-                response = st.write_stream(chain.stream({"question": input_text, "chat_history": trimmed_history}))
+            with st.container():
+                st.markdown('<div class="msg-wrap"><span class="msg-label msg-label-ai">AI</span><div class="msg-content">', unsafe_allow_html=True)
+                placeholder = st.empty()
+                full_response = ""
+                for chunk in chain.stream({"question": input_text, "chat_history": trimmed_history}):
+                    full_response += chunk
+                    placeholder.markdown(full_response + "▌")
+                placeholder.markdown(full_response)
+                st.markdown('</div></div>', unsafe_allow_html=True)
+                response = full_response
         except Exception as e:
             st.error(f"Chat error: {e}")
             st.stop()
