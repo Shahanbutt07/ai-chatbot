@@ -132,39 +132,26 @@ button[kind="primary"]:hover { background: var(--gold-dim) !important; box-shado
 @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:0.3} }
 @keyframes fade-in { from{opacity:0;transform:translateY(-3px)} to{opacity:1;transform:translateY(0)} }
 
-/* ── HIDE default Streamlit avatar images, replace with initials via CSS ── */
-[data-testid="chatAvatarIcon-user"] img,
-[data-testid="chatAvatarIcon-assistant"] img { display: none !important; }
-
+/* ── AVATARS ── */
 [data-testid="chatAvatarIcon-user"],
 [data-testid="chatAvatarIcon-assistant"] {
-    width: 28px !important; height: 28px !important;
+    width: 28px !important;
+    height: 28px !important;
     border-radius: 6px !important;
-    display: flex !important; align-items: center !important; justify-content: center !important;
-    font-family: 'JetBrains Mono', monospace !important;
-    font-size: 10px !important; font-weight: 500 !important;
+    overflow: hidden !important;
     flex-shrink: 0 !important;
+}
+[data-testid="chatAvatarIcon-user"] *,
+[data-testid="chatAvatarIcon-assistant"] * {
+    display: none !important;
 }
 [data-testid="chatAvatarIcon-user"] {
     background: var(--ink-4) !important;
     border: 1px solid var(--line-hi) !important;
-    color: var(--silver) !important;
-}
-[data-testid="chatAvatarIcon-user"]::after {
-    content: 'YOU' !important;
-    color: var(--silver) !important;
-    font-size: 8px !important;
-    letter-spacing: 0.5px !important;
 }
 [data-testid="chatAvatarIcon-assistant"] {
     background: #1C1400 !important;
     border: 1px solid var(--gold) !important;
-    color: var(--gold) !important;
-}
-[data-testid="chatAvatarIcon-assistant"]::after {
-    content: '◎' !important;
-    color: var(--gold) !important;
-    font-size: 12px !important;
 }
 
 /* ── MESSAGES ── */
@@ -175,7 +162,7 @@ button[kind="primary"]:hover { background: var(--gold-dim) !important; box-shado
 [data-testid="stChatMessage"] pre { background: var(--ink-3) !important; border: 1px solid var(--line) !important; border-left: 2px solid var(--gold) !important; border-radius: 0 var(--r-sm) var(--r-sm) 0 !important; padding: 16px !important; }
 [data-testid="stChatMessage"] pre code { background: transparent !important; border: none !important; padding: 0 !important; color: var(--white-dim) !important; }
 
-/* ── CHAT INPUT — kill Streamlit's red outline completely ── */
+/* ── CHAT INPUT ── */
 [data-testid="stChatInput"],
 [data-testid="stChatInput"] > div,
 [data-testid="stChatInput"] > div > div {
@@ -192,13 +179,11 @@ button[kind="primary"]:hover { background: var(--gold-dim) !important; box-shado
     box-shadow: 0 0 0 2px var(--gold-dim) !important;
     outline: none !important;
 }
-/* Kill any red/orange/default focus rings from Streamlit internals */
 [data-testid="stChatInput"] *:focus,
 [data-testid="stChatInput"] *:focus-visible,
 [data-testid="stChatInput"] *:focus-within { outline: none !important; box-shadow: none !important; border-color: transparent !important; }
 [data-testid="stChatInput"] textarea { background: transparent !important; color: var(--white) !important; font-family: 'Inter', sans-serif !important; font-size: 14px !important; font-weight: 300 !important; border: none !important; outline: none !important; box-shadow: none !important; }
 [data-testid="stChatInput"] textarea::placeholder { color: var(--ash) !important; font-style: italic; }
-/* The send button inside chat input */
 [data-testid="stChatInput"] button { background: var(--gold-dim) !important; border: 1px solid var(--gold) !important; border-radius: 6px !important; color: var(--gold) !important; }
 
 .stAlert { background: var(--ink-3) !important; border-radius: var(--r-sm) !important; border: 1px solid var(--line) !important; font-size: 12px !important; }
@@ -325,7 +310,6 @@ with st.sidebar:
     st.divider()
     st.markdown(f"<div class='token-badge'>{st.session_state.token_count:,} tokens this session</div>", unsafe_allow_html=True)
 
-# ── MAIN ───────────────────────────────────────────────────────────────────
 if st.session_state.active_conv_id is None:
     st.markdown("""
     <div class="welcome-wrap">
